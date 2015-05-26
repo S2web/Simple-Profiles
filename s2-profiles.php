@@ -10,8 +10,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Simple Profiles
- * Plugin URI:        http://s2webpress.com/plugins/simple-profiles
- * Description:       Simple Profiles for your business or organization. Each profile features an 
+ * Plugin URI:        https://github.com/S2web/Simple-Profiles
+ * Description:       Simple Profiles for your business or organization. Each profile features fields with name, bio, profile picture, email, phone number, website, job/position title, custom links, social media links
  * Version:           2.0.0
  * Author:            Steven Slack
  * Author URI:        http://s2webpress.com
@@ -19,8 +19,6 @@
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages
- * GitHub Plugin URI: https://github.com/s2web/s2-profiles
- * WordPress-Plugin-Boilerplate: v2.6.1
  */
 
 // If this file is called directly, abort.
@@ -59,7 +57,7 @@ class S2_Profiles {
 		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$this->profile_featured_image_metabox();
 			S2_Profiles_Admin::get_instance();
-    	}
+		}
 
 		// Load plugin text domain
 		add_action( 'plugins_loaded', array( $this, 'load_profiles_textdomain' ) );
@@ -88,11 +86,13 @@ class S2_Profiles {
 	 */
 	public function setup_constants() {
 
-		if ( ! defined( 'S2_VERSION' ) )
+		if ( ! defined( 'S2_VERSION' ) ) {
 			define( 'S2_VERSION', '2.0.0' );
+		}
 
-		if ( ! defined( 'S2_PROFILES' ) )
+		if ( ! defined( 'S2_PROFILES' ) ) {
 			define( 'S2_PROFILES', plugins_url( 's2-profiles' ) );
+		}
 		
 	}
 
@@ -145,18 +145,21 @@ class S2_Profiles {
 
 	}
 
+	/**
+	 * Change the Featured Image Metabox to more appropriately assign profile pcitures
+	 */
 	public function profile_featured_image_metabox() {
-
 		new Featured_Image_Metabox_Customizer( array(
 			'post_type'     => 's2_profiles',
 			'metabox_title' => __( 'Profile Picture',        's2-profiles' ),
 			'set_text'      => __( 'Set Profile Picture',    's2-profiles' ),
 			'remove_text'   => __( 'Remove Profile Picture', 's2-profiles' )
 		));
-
 	}
 
 }
+
+// Get the instance on plugins_loaded
 add_action( 'plugins_loaded', array( 'S2_Profiles', 'get_instance' ) );
 
 register_activation_hook( __FILE__, array( 'S2_Profiles', 'activate' ) );

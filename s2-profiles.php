@@ -91,13 +91,8 @@ class S2_Profiles {
 		if ( ! defined( 'S2_VERSION' ) )
 			define( 'S2_VERSION', '2.0.0' );
 
-		// Plugin Folder Path
-		if ( ! defined( 'S2_DIR' ) )
-			define( 'S2_DIR', dirname( __FILE__ ) );
-
-		// Plugin Folder URL
-		if ( ! defined( 'S2_URL' ) )
-			define( 'S2_URL', plugins_url( __FILE__ ) );
+		if ( ! defined( 'S2_PROFILES' ) )
+			define( 'S2_PROFILES', plugins_url( 's2-profiles' ) );
 		
 	}
 
@@ -108,7 +103,7 @@ class S2_Profiles {
 	public function load_dependencies() {
 
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-custom-post-type.php';
-		require_once plugin_dir_path( __FILE__ ) . 'includes/class-common.php';
+		require_once plugin_dir_path( __FILE__ ) . 'includes/class-display.php';
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-featured-image-metabox-customizer.php';
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-s2-profiles-admin.php';
 

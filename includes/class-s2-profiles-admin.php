@@ -77,7 +77,7 @@ class S2_Profiles_Admin {
 
 		$screen = get_current_screen();
 		if ( 's2_profiles' == $screen->post_type ) {
-			wp_enqueue_style( 's2-profiles-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), S2_VERSION );
+			wp_enqueue_style( 's2-profiles-admin-styles', S2_PROFILES . 'assets/css/admin.css', array(), S2_VERSION );
 		}
 
 	}

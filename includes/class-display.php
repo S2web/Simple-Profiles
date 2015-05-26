@@ -161,6 +161,58 @@ class S2_Profiles_Common {
 		}
 	}
 
+
+	public function get_custom_links( $profile_links ) {
+
+		global $post;
+
+		$custom_link = ''; // initiate custom link variable
+
+		// if a custom website link is empty return early
+		if ( ! $profile_links['custom'] ) {
+			return;
+		}
+
+		// get the custom text for the website link
+		$custom_text = esc_html__( get_post_meta( $post->ID, 'profile-custom-text', true ), 's2-profiles' );
+
+		if ( $custom_text ) {
+			$custom_link = sprintf( '<a href="%1$s" class="profile-custom">%2$s</a><!--/.profile-custom -->', 
+				$profile_links['custom'], 
+				$custom_text 
+			);
+		} else {
+			$custom_link = sprintf( '<a href="%1$s" class="profile-custom">%1$s</a><!--/.profile-custom -->', 
+				$profile_links['custom'] 
+			);
+		}	
+
+		return $custom_link;
+
+	}
+
+
+	public function get_profile_website( $profile_links ) {
+
+		global $post;
+
+		$website = ''; // initiate custom website variable
+
+		// If there is no website link return early
+		if ( ! $profile_links['website'] ) {
+			return;
+		}
+
+		$website = sprintf( '<span class="profile-website">%1$s: <a href="%2$s" rel="bookmark">%2$s</a></span><!--/.profile-website -->', 
+			esc_html__( 'Website', 's2-profiles' ), 
+			$profile_links['website'] 
+		);
+
+		return $website;
+
+	}
+
+
 	/**
 	 * Display URL Links
 	 * 
@@ -172,38 +224,14 @@ class S2_Profiles_Common {
 
 		$profile_links   = $this->profile_links();
 		$profiles_string = '<div class="profiles-links">%1$s%2$s</div><!--/.profiles-links -->';
-		$custom_link     = '';
-		$website         = '';
 
 		// return early if there are no profile links
 		if ( ! $profile_links ) {
 			return;
 		}
 
-		// if a custom website link is filled out display it
-		if ( $profile_links['custom'] ) {
-			// get the custom text for the website link
-			$custom_text = esc_html__( get_post_meta( $post->ID, 'profile-custom-text', true ), 's2-profiles' );
-
-			if ( $custom_text ) {
-				$custom_link = sprintf( '<a href="%1$s" class="profile-custom">%2$s</a><!--/.profile-custom -->', 
-					$profile_links['custom'], 
-					$custom_text 
-				);
-			} else {
-				$custom_link = sprintf( '<a href="%1$s" class="profile-custom">%1$s</a><!--/.profile-custom -->', 
-					$profile_links['custom'] 
-				);
-			}
-		}
-
-		// If there is a website entered display it
-		if ( $profile_links['website'] ) {
-			$website = sprintf( '<span class="profile-website">%1$s: <a href="%2$s" rel="bookmark">%2$s</a></span><!--/.profile-website -->', 
-				esc_html__( 'Website', 's2-profiles' ), 
-				$profile_links['website'] 
-			);
-		}
+		$custom_link = $this->get_custom_links( $profile_links );
+		$website     = $this->get_profile_website( $profile_links );
 
 		return sprintf( $profiles_string, $custom_link, $website );
 
@@ -238,34 +266,25 @@ class S2_Profiles_Common {
 	 * @return string
 	 */
 	public function display_profile_meta() {
-
-		$social = '';
 		
 		global $post;
 
-		// define meta variable
-		$profile_meta = get_post_meta( $post->ID );
-
-		$social_stuff  = $this->social_links();
+		$social        = $this->social_links();
 		$profile_links = $this->profile_links();
 
-		if ( array_filter( $profile_links ) || array_filter( $social_stuff ) ) {
 
-		$social = '<div class="profiles-footer">';
+		$output_string = '<div class="profiles-footer">%1$s%2$s</div><!--/.profiles-footer-->';
 
 		if ( $profile_links ) {
-			$social .= $this->display_profile_links();
+			$profile_links = $this->display_profile_links();
 		}
 
-		if ( $social_stuff ) {
-			$social .= $this->display_social_links();
+		if ( $social ) {
+			$social = $this->display_social_links();
 		}
 
-		$social .= '</div>'; // end .profiles-social-social
+		return sprintf( $output_string, $profile_links, $social );
 
-		} // end if any footer data is available
-
-		return $social;
 	}
 
 
@@ -318,11 +337,9 @@ class S2_Profiles_Common {
 	/**
 	 * [profiles_list_display description]
 	 * @param  string $profile_cat taxonomy parameter for query
-	 * @param  string $layout      left, right, photo-grid
-	 * @param  string $display     name-under-photo, photo-name-title, photo-name
 	 * @return string              [description]
 	 */
-	public function profiles_list_display( $profile_cat = '', $layout = '', $display = '' ) {
+	public function profiles_list_display( $profile_cat = '' ) {
 		global $post;
 
 		$args = $this->taxonomy_query( $profile_cat );
@@ -373,13 +390,11 @@ class S2_Profiles_Common {
 
 		extract( shortcode_atts(
 			array(
-				'category' =>  '',			
-				'layout'   =>  '',
-	            'display'  =>  '',
+				'category' =>  '',
 			), $atts )
 		);
 
-		$profiles = $this->profiles_list_display( $category, $layout, $display );
+		$profiles = $this->profiles_list_display( $category );
 
 		return $profiles;
 	}
@@ -394,7 +409,7 @@ class S2_Profiles_Common {
 		$post_type = get_post_type( get_the_ID() );
 
 		// checks whether the post type is the profiles post type
-		if ( $post_type === 's2_profiles' && is_single() || is_post_type_archive( 's2_profiles' ) || is_page_template( 'page-staff.php' ) ) {
+		if ( $post_type === 's2_profiles' && is_single() || is_post_type_archive( 's2_profiles' ) ) ) {
 
 			if ( has_post_thumbnail() ) { 
 				$content = $this->display_profile_info() . the_post_thumbnail( 'profiles-thumb' ) .  $content . $this->display_profile_meta();
@@ -435,8 +450,8 @@ class S2_Profiles_Common {
 
 if ( ! function_exists( 'simple_profiles' ) ) {
 
-	function simple_profiles( $profile_cat = '', $layout = '', $display = '' ) {
-		$profiles = S2_Profiles_Common::get_instance()->profiles_list_display( $profile_cat, $layout, $display );
+	function simple_profiles( $profile_cat = '' ) {
+		$profiles = S2_Profiles_Common::get_instance()->profiles_list_display( $profile_cat );
 		echo $profiles;
 	}
 

@@ -1,0 +1,22 @@
+/* This stylesheet is used to style the admin option form of the plugin. */
+
+#s2_profiles_meta_info label, #s2_profiles_social_info label {
+	width:115px;
+	display:inline-block;
+}
+.profiles-bio-title {
+	color: #555;
+	font-size: 20px !important;
+	margin-bottom: -35px !important;
+}
+.custom-link {
+	/*padding: 1em 0 0 0;
+	border-top: 1px solid #EEE;
+	margin-top: 2em;*/
+}
+
+.custom-link h3 {
+	border-bottom: none;
+	padding: 8px 0 !important;
+	border-top: 1px solid #EEE;
+}

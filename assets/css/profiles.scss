@@ -54,22 +54,6 @@
     content: '\e607';
 }
 
-// .svg {
-// 	.profiles-social {
-// 		a {
-// 			background-image: url(../images/profiles-social.svg);
-// 		}
-// 	}
-// }
-
-// .no-svg {
-// 	.profiles-social {
-// 		a {
-// 			background-image: url(../images/profiles-social.png);
-// 		}
-// 	}
-// }
-
 .profile-meta,
 .profiles-footer,
 .simple-profile {
@@ -77,7 +61,6 @@
     &:before,
     &:after {
         display: table;
-
         content: ' ';
     }
     &:after {
@@ -85,9 +68,15 @@
     }
 }
 
+.profile-custom {
+    display:inline-block;
+}
+
+.profile-website {
+    display:block;
+}
 
 .profile-custom, .profile-website {
-    display: inline-block;
     margin-bottom:10px;
 }
 
@@ -113,24 +102,6 @@
             clip: rect(1px, 1px, 1px, 1px);
         }
     }
-    // .profilecon-facebook {
-    // 	background-position: -157px 0;
-    // }
-    // .profilecon-twitter {
-    // 	background-position: -104px 0;
-    // }
-    // .profilecon-linkedin {
-    // 	background-position: -312px 0;
-    // }
-    // .profilecon-pinterest {
-    // 	background-position: -260px 0;
-    // }
-    // .profilecon-instagram {
-    // 	background-position: -364px 0;
-    // }
-    // .profilecon-googleplus {
-    // 	background-position: -208px 0;
-    // }
 }
 
 .profile-meta {
@@ -147,12 +118,14 @@
     }
 }
 
-.simple-profile {
-    margin-bottom: 2em;
-
+.profile-info, .profile-picture  {
     a {
-    	border:none !important;
+        border:none !important;
     }
+}
+
+.simple-profile {
+    margin-bottom: 2em; 
 
     hr {
     	margin-top: 20px;

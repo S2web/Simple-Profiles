@@ -58,7 +58,7 @@ class S2_Profiles_Display {
 
 		global $post;
 
-		if ( is_post_type_archive( 's2_profiles' ) || has_shortcode( $post->post_content, 'simple-profiles' ) || is_singular( 's2_profiles' )  ) {
+		if ( is_post_type_archive( 's2_profiles' ) || has_shortcode( $post->post_content, 'simple-profiles' ) || is_singular( 's2_profiles' ) ) {
 			wp_enqueue_style( 'simple-profiles-styles', PROFILES_PATH . '/assets/css/profiles.css', array(), PROFILES_VERSION );
 		}
 
@@ -104,10 +104,10 @@ class S2_Profiles_Display {
 		$info_string = '<div class="profile-meta">%1$s%2$s%3$s</div><!--/.profile-meta -->';
 	
 		if ( ! empty( $title ) ) {
-			$title = sprintf( '<span class="job-title"><strong>%s</strong></span><!--/.job-title -->', $title );
+			$title = sprintf( '<span class="job-title" itemprop="jobtitle"><strong>%s</strong></span><!--/.job-title -->', $title );
 		}
 		if ( ! empty( $phone ) ) {
-			$phone = sprintf( '<div class="profile-phone">%s<span class="tel">%s</span></div><!--/.profile-phone -->', __( 'tel: ',  'simple-profiles' ), $phone );		 
+			$phone = sprintf( '<div class="profile-phone">%s<span class="tel" itemprop="email">%s</span></div><!--/.profile-phone -->', __( 'tel: ',  'simple-profiles' ), $phone );		 
 		}
 		if ( ! empty( $email ) && is_email( $email ) ) {
 			$email = sprintf( '<a class="profile-email" href="mailto:%1$s">%1$s</a><!--/.profile-email -->', antispambot( $email ) );
@@ -219,7 +219,7 @@ class S2_Profiles_Display {
 			return;
 		}
 
-		$website = sprintf( '<span class="profile-website">%1$s: <a href="%2$s" rel="bookmark">%2$s</a></span><!--/.profile-website -->', 
+		$website = sprintf( '<span class="profile-website" itemprop="url">%1$s: <a href="%2$s" rel="bookmark">%2$s</a></span><!--/.profile-website -->', 
 			esc_html__( 'Website', 'simple-profiles' ), 
 			$profile_links['website'] 
 		);
@@ -341,7 +341,7 @@ class S2_Profiles_Display {
 		if ( get_the_title() === '' )
 			return;
 
-		$name = sprintf( '<h3 class="profile-name"><a href="%1$s" rel="bookmark">%2$s</a></h3>',
+		$name = sprintf( '<h3 class="profile-name" itemprop="name"><a href="%1$s" rel="bookmark">%2$s</a></h3>',
 			get_the_permalink(),
 			get_the_title()
 		);
@@ -358,7 +358,7 @@ class S2_Profiles_Display {
 	 */
 	public function profile_bio() {
 		if ( get_the_content() ) {
-			return '<p class="profiles-bio">' . get_the_content() . '</p>';
+			return '<p class="profiles-bio" itemprop="description">' . get_the_content() . '</p>';
 		}
 	}
 
@@ -434,7 +434,7 @@ class S2_Profiles_Display {
 			$count++;
 
 			// the profile wrapper
-			$output_string = '<div id="%1$s-%2$s" class="simple-profile">%3$s<div class="profile-info">%4$s %5$s %6$s %7$s</div><!--/.profile-info --><hr></div><!--/.simple-profile -->';
+			$output_string = '<div id="%1$s-%2$s" class="simple-profile" itemscope itemtype="http://schema.org/Person">%3$s<div class="profile-info">%4$s %5$s %6$s %7$s</div><!--/.profile-info --><hr></div><!--/.simple-profile -->';
 
 			$profile .= sprintf( $output_string,
 				$this->slug_name(),

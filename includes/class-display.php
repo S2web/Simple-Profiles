@@ -321,7 +321,7 @@ class S2_Profiles_Display {
 			return;
 		}
 
-		$picture = sprintf( '<div class="s2-profile-avatar"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+		$picture = sprintf( '<div class="profile-picture"><a href="%1$s" rel="bookmark">%2$s</a></div>',
 			get_the_permalink(),
 			get_the_post_thumbnail( get_the_id(), 'profiles-thumb' )
 		);
@@ -434,7 +434,7 @@ class S2_Profiles_Display {
 			$count++;
 
 			// the profile wrapper
-			$output_string = '<div id="%1$s-%2$s" class="simple-profile">%3$s<div class="profile-info">%4$s %5$s %6$s %7$s</div><!--/.profile-info --></div><!--/.simple-profile -->';
+			$output_string = '<div id="%1$s-%2$s" class="simple-profile">%3$s<div class="profile-info">%4$s %5$s %6$s %7$s</div><!--/.profile-info --><hr></div><!--/.simple-profile -->';
 
 			$profile .= sprintf( $output_string,
 				$this->slug_name(),

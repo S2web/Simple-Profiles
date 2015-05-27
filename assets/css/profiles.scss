@@ -1,29 +1,32 @@
 @font-face {
-	font-family: 'icomoon';
-	src:url('../fonts/icomoon.eot?91cu4m');
-	src:url('../fonts/icomoon.eot?#iefix91cu4m') format('embedded-opentype'),
-		url('../fonts/icomoon.woff?91cu4m') format('woff'),
-		url('../fonts/icomoon.ttf?91cu4m') format('truetype'),
-		url('../fonts/icomoon.svg?91cu4m#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'icomoon';
+    font-weight: normal;
+    font-style: normal;
+
+    src: url('../fonts/icomoon.eot?91cu4m');
+    src: url('../fonts/icomoon.eot?#iefix91cu4m') format('embedded-opentype'),
+    url('../fonts/icomoon.woff?91cu4m') format('woff'),
+    url('../fonts/icomoon.ttf?91cu4m') format('truetype'),
+    url('../fonts/icomoon.svg?91cu4m#icomoon') format('svg');
 }
 
-[class^="profilecon-"], [class*=" profilecon-"] {
-	font-family: 'icomoon';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
+[class^='profilecon-'],
+[class*=' profilecon-'] {
+    font-family: 'icomoon';
+    font-weight: normal;
+    font-style: normal;
+    font-variant: normal;
+    line-height: 1;
 
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    text-transform: none;
+
+    speak: none;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
- 
+
 // .profilecon-phone:before  {
 // 	content: "\e600";
 // 	margin-right: 10px;
@@ -33,22 +36,22 @@
 // 	margin-right: 10px;
 // }
 .profilecon-twitter:before {
-	content: "\e602";
+    content: '\e602';
 }
 .profilecon-facebook:before {
-	content: "\e603";
+    content: '\e603';
 }
 .profilecon-googleplus:before {
-	content: "\e604";
+    content: '\e604';
 }
 .profilecon-pinterest:before {
-	content: "\e605";
+    content: '\e605';
 }
 .profilecon-linkedin:before {
-	content: "\e606";
+    content: '\e606';
 }
 .profilecon-instagram:before {
-	content: "\e607";
+    content: '\e607';
 }
 
 // .svg {
@@ -67,71 +70,91 @@
 // 	}
 // }
 
-.profile-meta, .profiles-footer, .simple-profile {
-	*zoom:1;
-	&:before, &:after {
-		content: " ";
-		display: table;
-	}
-	&:after {
-		clear:both;
-	}
+.profile-meta,
+.profiles-footer,
+.simple-profile {
+    *zoom: 1;
+    &:before,
+    &:after {
+        display: table;
+
+        content: ' ';
+    }
+    &:after {
+        clear: both;
+    }
 }
 
-.profiles-social, .profiles-links {
-	display: inline-block;
-	a {
-		text-decoration: none;
-	}
+
+.profile-custom, .profile-website {
+    display: inline-block;
+    margin-bottom:10px;
 }
 
 .profiles-social {
-	margin-top:0.5em;
-	margin-bottom:0.5em;
-	a {
-		display: inline-block;
-		width: 20px;
-		height: 20px;
-		margin: 5px 10px;
-		background-repeat:no-repeat;
-		border:none;
-		text-decoration: none;
-		span {
-			clip: rect(1px, 1px, 1px, 1px);
-			position: absolute !important;	
-		}
-	}
-	// .profilecon-facebook {
-	// 	background-position: -157px 0;
-	// }
-	// .profilecon-twitter {
-	// 	background-position: -104px 0;
-	// }
-	// .profilecon-linkedin {
-	// 	background-position: -312px 0;
-	// }
-	// .profilecon-pinterest {
-	// 	background-position: -260px 0;
-	// }
-	// .profilecon-instagram {
-	// 	background-position: -364px 0;
-	// }
-	// .profilecon-googleplus {
-	// 	background-position: -208px 0;
-	// }
+    margin-top: .5em;
+    margin-bottom: .5em;
+    a {
+        display: inline-block;
+
+        width: 20px;
+        height: 20px;
+        margin: 5px 10px;
+
+        text-decoration: none;
+
+        background-repeat: no-repeat;
+        &:first-of-type {
+        	margin-left:0;
+        }
+        span {
+            position: absolute !important;
+
+            clip: rect(1px, 1px, 1px, 1px);
+        }
+    }
+    // .profilecon-facebook {
+    // 	background-position: -157px 0;
+    // }
+    // .profilecon-twitter {
+    // 	background-position: -104px 0;
+    // }
+    // .profilecon-linkedin {
+    // 	background-position: -312px 0;
+    // }
+    // .profilecon-pinterest {
+    // 	background-position: -260px 0;
+    // }
+    // .profilecon-instagram {
+    // 	background-position: -364px 0;
+    // }
+    // .profilecon-googleplus {
+    // 	background-position: -208px 0;
+    // }
 }
 
 .profile-meta {
-	margin: 1em auto;
-	font-size: 1.1em;
-	.job-title, .profilecon-email, .profilecon-phone {
-		display:block;
-	}
-	.profilecon-email {
-		text-decoration: none;
-	}
+    font-size: 1.1em;
+
+    margin: 1em auto;
+    .job-title,
+    .profilecon-email,
+    .profilecon-phone {
+        display: block;
+    }
+    .profilecon-email {
+        text-decoration: none;
+    }
 }
 
 .simple-profile {
-	margin-bottom: 4em;
+    margin-bottom: 2em;
+
+    a {
+    	border:none !important;
+    }
+
+    hr {
+    	margin-top: 20px;
+    }
 }

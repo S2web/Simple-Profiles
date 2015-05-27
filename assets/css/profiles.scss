@@ -67,7 +67,7 @@
 // 	}
 // }
 
-.profiles-info, .profiles-footer, .s2-profile {
+.profile-meta, .profiles-footer, .simple-profile {
 	*zoom:1;
 	&:before, &:after {
 		content: " ";
@@ -121,7 +121,7 @@
 	// }
 }
 
-.profiles-info {
+.profile-meta {
 	margin: 1em auto;
 	font-size: 1.1em;
 	.job-title, .profilecon-email, .profilecon-phone {
@@ -132,35 +132,6 @@
 	}
 }
 
-.s2-profile {
+.simple-profile {
 	margin-bottom: 4em;
-}
-
-@media screen and ( min-width: 37.500em ) {
-
-	.left-profile, .right-profile {
-		.s2-profile-avatar {
-			width: 30%;
-		}
-		.s2-profile-info {
-			width: 65%;
-		}
-	}
-
-	.left-profile {
-		.s2-profile-avatar {
-			float:left;
-		}
-		.s2-profile-info {
-			float:right;
-		}
-	}	
-	.right-profile {
-		.s2-profile-avatar {
-			float:right;
-		}
-		.s2-profile-info {
-			float:left;
-		}
-	}	
 }

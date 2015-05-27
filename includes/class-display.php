@@ -1,42 +1,26 @@
 <?php
 /**
- * Plugin Name.
+ * Simple Profiles
  *
- * @package   S2_Profiles_Common
- * @author    Steven Slack <steven@s2webpress.com>
- * @license   GPL-2.0+
- * @link      http://s2webpress.com
- * @copyright 2014 S2 Web LLC
+ * @package   S2_Profiles_Display
  */
 
 /**
- * Plugin class. This class should ideally be used to work with the
- * public-facing side of the WordPress site.
- *
- * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `class-s2-profiles-admin.php`
- *
- * 
- *
- * @package S2_Profiles_Common
- * @author  Steven Slack <steven@s2webpress.com>
+ * The front end display side of the plugin.
  */
-class S2_Profiles_Common {
+class S2_Profiles_Display {
+
 
 	/**
 	 * Instance of this class.
-	 *
-	 * @since    1.0.0
-	 *
 	 * @var      object
 	 */
 	protected static $instance = null;
 
+
 	/**
 	 * Initialize the plugin by setting localization and loading public scripts
 	 * and styles.
-	 *
-	 * @since     1.0.0
 	 */
 	private function __construct() {
 
@@ -47,14 +31,11 @@ class S2_Profiles_Common {
 		// add the profiles shortcode
 	    add_shortcode( 'simple-profiles', array( $this, 'profiles_shortcode' ) );
 
-	    //add_action( 'pre_get_posts' array( $this, 'profiles_num_display' ) );
-
 	}
+
 
 	/**
 	 * Return an instance of this class.
-	 *
-	 * @since     1.0.0
 	 *
 	 * @return    object    A single instance of this class.
 	 */
@@ -72,15 +53,38 @@ class S2_Profiles_Common {
 	/**
 	 * Register and enqueue public-facing style sheet.
 	 *
-	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+
 		global $post;
 
 		if ( is_post_type_archive( 's2_profiles' ) || has_shortcode( $post->post_content, 'simple-profiles' ) || is_singular( 's2_profiles' )  ) {
-			wp_enqueue_style( 's2-profiles-styles', S2_PROFILES . '/assets/css/profiles.css', array(), S2_VERSION );
+			wp_enqueue_style( 'simple-profiles-styles', PROFILES_PATH . '/assets/css/profiles.css', array(), PROFILES_VERSION );
 		}
 
+	}
+
+
+	/**
+	 * Slugify a string
+	 * 
+	 * Convert the name / title to a class name or URL friendly string
+	 * @return string
+	 */
+	public function slug_name() {
+
+		$string = get_the_title();
+
+		// Lower case everything
+		$string = strtolower( $string ) ;
+		// Make alphanumeric (removes all other characters)
+		$string = preg_replace( "/[^a-z0-9_\s-]/", "", $string );
+		// Clean up multiple dashes or whitespaces
+		$string = preg_replace( "/[\s-]+/", " ", $string );
+		// Convert whitespaces and underscore to dash
+		$string = preg_replace( "/[\s_]/", "-", $string );
+
+		return $string;
 	}
 
 
@@ -93,20 +97,20 @@ class S2_Profiles_Common {
 		global $post;
 
 		// get the post meta and sanitize it.
-		$title = esc_html__( get_post_meta( $post->ID, 'profile-title', true ), 's2-profiles' );
+		$title = esc_html__( get_post_meta( $post->ID, 'profile-title', true ), 'simple-profiles' );
 		$phone = esc_html( get_post_meta( $post->ID, 'profile-phone', true ) );
 		$email = get_post_meta( $post->ID, 'profile-email', true );
 
-		$info_string = '<div class="profiles-info">%1$s%2$s%3$s</div><!--/.profiles-info -->';
+		$info_string = '<div class="profile-meta">%1$s%2$s%3$s</div><!--/.profile-meta -->';
 	
 		if ( ! empty( $title ) ) {
 			$title = sprintf( '<span class="job-title"><strong>%s</strong></span><!--/.job-title -->', $title );
 		}
 		if ( ! empty( $phone ) ) {
-			$phone = sprintf( '<div class="s2-phone">%s<span class="tel">%s</span></div><!--/.s2-phone -->', __( 'tel: ',  's2-profiles' ), $phone );		 
+			$phone = sprintf( '<div class="profile-phone">%s<span class="tel">%s</span></div><!--/.profile-phone -->', __( 'tel: ',  'simple-profiles' ), $phone );		 
 		}
 		if ( ! empty( $email ) && is_email( $email ) ) {
-			$email = sprintf( '<a class="s2-email" href="mailto:%1$s">%1$s</a><!--/.s2-email -->', antispambot( $email ) );
+			$email = sprintf( '<a class="profile-email" href="mailto:%1$s">%1$s</a><!--/.profile-email -->', antispambot( $email ) );
 		}
 
 		if ( $title || $phone || $mail ) {
@@ -162,6 +166,12 @@ class S2_Profiles_Common {
 	}
 
 
+	/**
+	 * Get the custom links with custom text 
+	 * 
+	 * @param  array $profile_links the custom field keys and values for the profile links
+	 * @return string
+	 */
 	public function get_custom_links( $profile_links ) {
 
 		global $post;
@@ -174,8 +184,10 @@ class S2_Profiles_Common {
 		}
 
 		// get the custom text for the website link
-		$custom_text = esc_html__( get_post_meta( $post->ID, 'profile-custom-text', true ), 's2-profiles' );
+		$custom_text = esc_html__( get_post_meta( $post->ID, 'profile-custom-text', true ), 'simple-profiles' );
 
+		// if there is custom text display it 
+		// if not just show the actual URL instead
 		if ( $custom_text ) {
 			$custom_link = sprintf( '<a href="%1$s" class="profile-custom">%2$s</a><!--/.profile-custom -->', 
 				$profile_links['custom'], 
@@ -192,9 +204,13 @@ class S2_Profiles_Common {
 	}
 
 
+	/**
+	 * Get the display for the website
+	 * 
+	 * @param  array $profile_links the custom field keys and values for the profile links
+	 * @return string
+	 */
 	public function get_profile_website( $profile_links ) {
-
-		global $post;
 
 		$website = ''; // initiate custom website variable
 
@@ -204,7 +220,7 @@ class S2_Profiles_Common {
 		}
 
 		$website = sprintf( '<span class="profile-website">%1$s: <a href="%2$s" rel="bookmark">%2$s</a></span><!--/.profile-website -->', 
-			esc_html__( 'Website', 's2-profiles' ), 
+			esc_html__( 'Website', 'simple-profiles' ), 
 			$profile_links['website'] 
 		);
 
@@ -219,8 +235,6 @@ class S2_Profiles_Common {
 	 * @return string
 	 */
 	public function display_profile_links() {
-
-		global $post;
 
 		$profile_links   = $this->profile_links();
 		$profiles_string = '<div class="profiles-links">%1$s%2$s</div><!--/.profiles-links -->';
@@ -237,43 +251,46 @@ class S2_Profiles_Common {
 
 	}
 
-
+	/**
+	 * The social media links
+	 * 
+	 * Display for the custom fields to display social media links
+	 * @return string
+	 */
 	public function display_social_links() {
 
-		global $post;
+		$social_links  = $this->social_links(); // get the custom meta data
+		$output_string = '<div class="profiles-social">%1$s</div><!--/.profiles-social -->';
+		$links         = ''; // set the links variable to empty
 
-		$social_links = $this->social_links();
-		$social_string = '<div class="profiles-social">%1$s</div><!--/.profiles-social -->';
-		$links = '';
-
+		// return early if there is no custom meta set
 		if ( ! $social_links ) {
 			return;
 		}
 
+		// the display for each social icon
+		// example: <a href="http://facebook.com" rel="me" class="profilecon-facebook"><span>facebook</span></a>
 		foreach ( $social_links as $key => $value ) {
 			if ( $value ) {
 			 	$links .= sprintf( '<a href="%1$s" rel="me" class="profilecon-%2$s"><span>%2$s</span></a>', $value, $key );
 			}
 		}
 
-		return sprintf( $social_string, $links );
+		return sprintf( $output_string, $links );
 
 	}
 
 
 	/**
-	 * Display the social media icons
+	 * Display the profile footer 
+	 * contains the meta information associated with the profile
+	 * 
 	 * @return string
 	 */
-	public function display_profile_meta() {
-		
-		global $post;
+	public function profile_footer() {
 
-		$social        = $this->social_links();
-		$profile_links = $this->profile_links();
-
-
-		$output_string = '<div class="profiles-footer">%1$s%2$s</div><!--/.profiles-footer-->';
+		$social        = $this->social_links();  // get the social links display
+		$profile_links = $this->profile_links(); // get the custom links display
 
 		if ( $profile_links ) {
 			$profile_links = $this->display_profile_links();
@@ -283,11 +300,67 @@ class S2_Profiles_Common {
 			$social = $this->display_social_links();
 		}
 
-		return sprintf( $output_string, $profile_links, $social );
+		// if either the social or the custom links are set display the footer
+		if ( $profile_links || $social ) {
+			$output_string = '<div class="profiles-footer">%1$s%2$s</div><!--/.profiles-footer-->';
+			return sprintf( $output_string, $profile_links, $social );
+		}
 
 	}
 
 
+	/**
+	 * The profile picture of the person
+	 * 
+	 * Set with the featured image
+	 * @return string
+	 */
+	public function profile_picture_display() {
+
+		if ( ! has_post_thumbnail() ) {
+			return;
+		}
+
+		$picture = sprintf( '<div class="s2-profile-avatar"><a href="%1$s" rel="bookmark">%2$s</a></div>',
+			get_the_permalink(),
+			get_the_post_thumbnail( get_the_id(), 'profiles-thumb' )
+		);
+
+		return $picture;
+
+	}
+
+
+	/**
+	 * The name of the person
+	 * 
+	 * @return string
+	 */
+	public function profile_name() {
+
+		if ( get_the_title() === '' )
+			return;
+
+		$name = sprintf( '<h3 class="profile-name"><a href="%1$s" rel="bookmark">%2$s</a></h3>',
+			get_the_permalink(),
+			get_the_title()
+		);
+		
+		return $name;
+	}
+
+
+	/**
+	 * The profiles bio
+	 * 
+	 * Entered with the regular WordPress text editor
+	 * @return string
+	 */
+	public function profile_bio() {
+		if ( get_the_content() ) {
+			return '<p class="profiles-bio">' . get_the_content() . '</p>';
+		}
+	}
 
 
 	/**
@@ -296,24 +369,26 @@ class S2_Profiles_Common {
 	 * @param  string $profile_cat The profile category to run the query for
 	 * @return array
 	 */
-	public function taxonomy_query( $profile_cat = '' ) {
+	public function profile_query_args( $profile_cat = '' ) {
 
 		// Checks if the user has entered a profiles category attribute
-		if ( term_exists( $profile_cat, 's2_profiles_cat') ) {
+		if ( term_exists( $profile_cat, 's2_profiles_cat' ) ) {
 
-			$args = array( 
-				'post_type' => 's2_profiles',
-				'orderby'   => 'menu_order',
-				'order'     => 'ASC',
+			$args = array(
+				'post_type'              => 's2_profiles',
+				'orderby'                => 'menu_order',
+				'order'                  => 'ASC',
+				'posts_per_page'         => 500,
+				'posts_per_archive_page' => 500,
 				'tax_query' => array(                     
-				    'relation' 	=> 'AND',                   
-					    array(
-					        'taxonomy' 			=> 's2_profiles_cat',               
-					        'field' 			=> 'slug',                    
-					        'terms' 			=> $profile_cat,
-					        'include_children' 	=> false,
-					        'operator' 			=> 'IN'
-					    ),
+					'relation' => 'AND',                   
+					array(
+						'taxonomy'         => 's2_profiles_cat',               
+						'field'            => 'slug',                    
+						'terms'            => $profile_cat,
+						'include_children' => false,
+						'operator'         => 'IN'
+					),
 				) // end tax query
 
 			);	// end $args array
@@ -322,79 +397,79 @@ class S2_Profiles_Common {
 		} else {
 
 			$args = array( 
-				'post_type' => 's2_profiles',
-				'orderby' 	=> 'menu_order',
-				'order' 	=> 'ASC'
+				'post_type'              => 's2_profiles',
+				'orderby'                => 'menu_order',
+				'order'                  => 'ASC',
+				'posts_per_page'         => 500,
+				'posts_per_archive_page' => 500,
 			);
-
 		}
 
 		return $args;
 	}
 
 
-
 	/**
-	 * [profiles_list_display description]
+	 * The Profiles List
+	 * 
+	 * Returns a list view of the profiles
 	 * @param  string $profile_cat taxonomy parameter for query
-	 * @return string              [description]
+	 * @return string
 	 */
-	public function profiles_list_display( $profile_cat = '' ) {
+	public function profiles_list( $profile_cat = '' ) {
+		
 		global $post;
 
-		$args = $this->taxonomy_query( $profile_cat );
-
+		// setup the profile query
+		$args = $this->profile_query_args( $profile_cat );
 		$profile_query = new WP_Query( $args );
 
-		// define variable
-		$output = '';
+		$profile = ''; // set the profile variable
+		$count   = 1;  // start the count at 1
 
-		// The Loop
+		// The Profiles
 		if ( $profile_query->have_posts() ) :
-
 			while ( $profile_query->have_posts() ) : $profile_query->the_post();
 
-			$output .= '<div class="s2-profile">';
+			$count++;
 
-			if ( has_post_thumbnail() ) {
-				
-				$output .= '<div class="s2-profile-avatar"><a href="' . get_the_permalink() . '" rel="bookmark">' . get_the_post_thumbnail( $post->ID,'profiles-thumb' ) . '</a></div>';
-				
-			} // endif
+			// the profile wrapper
+			$output_string = '<div id="%1$s-%2$s" class="simple-profile">%3$s<div class="profile-info">%4$s %5$s %6$s %7$s</div><!--/.profile-info --></div><!--/.simple-profile -->';
 
-				$output .= '<div class="s2-profile-info">';
-					$output .= '<h3 class="profile-name"><a href="' . get_the_permalink() . '" rel="bookmark">' . get_the_title() . '</a></h3>';
-
-					$output .= $this->display_profile_info();
-					if ( get_the_content() ) {
-						$output .= '<p class="profiles-bio">' . get_the_content() . '</p>';
-					}
-					$output .= $this->display_profile_meta();
-
-				$output .= '</div>'; // end s2-profile-info
-			$output .= '</div>'; // end s2-profile
+			$profile .= sprintf( $output_string,
+				$this->slug_name(),
+				get_the_id(),
+				$this->profile_picture_display(),
+				$this->profile_name(),
+				$this->display_profile_info(),
+				$this->profile_bio(),
+				$this->profile_footer()
+			);
 
 			endwhile;
-
 		endif;
 
 		// Reset Post Data
 		wp_reset_postdata();
 
-		return $output;
+		return $profile;
 
 	}
 
-
+	/**
+	 * The Profiles Shortcode [simple-profiles]
+	 * 
+	 * @param  array $atts [description]
+	 * @return the profiles output
+	 */
 	public function profiles_shortcode( $atts ) {
 
-		extract( shortcode_atts(
+		$shortcode = shortcode_atts(
 			array(
-				'category' =>  '',
-			), $atts )
-		);
+				'category' => '',
+		), $atts );
 
-		$profiles = $this->profiles_list_display( $category );
+		$profiles = $this->profiles_list( $shortcode['category'] );
 
 		return $profiles;
 	}
@@ -409,12 +484,12 @@ class S2_Profiles_Common {
 		$post_type = get_post_type( get_the_ID() );
 
 		// checks whether the post type is the profiles post type
-		if ( $post_type === 's2_profiles' && is_single() || is_post_type_archive( 's2_profiles' ) ) ) {
+		if ( $post_type === 's2_profiles' && is_single() || is_post_type_archive( 's2_profiles' ) ) {
 
 			if ( has_post_thumbnail() ) { 
-				$content = $this->display_profile_info() . the_post_thumbnail( 'profiles-thumb' ) .  $content . $this->display_profile_meta();
+				$content = $this->display_profile_info() . the_post_thumbnail( 'profiles-thumb' ) .  $content . $this->profile_footer();
 			} else {
-				$content = $this->display_profile_info() .  $content . $this->display_profile_meta();
+				$content = $this->display_profile_info() .  $content . $this->profile_footer();
 			}		
 
 		}
@@ -422,37 +497,4 @@ class S2_Profiles_Common {
 		return $content;
 	}
 
-
-
-	/**
-	 * Use pre_get_posts to change number of posts_per_page for resource archive
-	 */
-	
-	 
-	// public function profiles_num_display( $query ) {
-
-	// 	$options = get_option( $this->csr_slug );
-
-	// 	if ( ! is_admin() && ! is_search() ) {
-
-	// 	    if ( $query->query_vars['post_type'] === 's2_profiles' ) {
-        
-	// 	        $query->set( 'posts_per_page', 1 );
-	// 	        return;
-	// 	    }
-
-	// 	}
-	 
-	// } // end profiles_num_display	
-
-}
-
-
-if ( ! function_exists( 'simple_profiles' ) ) {
-
-	function simple_profiles( $profile_cat = '' ) {
-		$profiles = S2_Profiles_Common::get_instance()->profiles_list_display( $profile_cat );
-		echo $profiles;
-	}
-
-}
+} // end class

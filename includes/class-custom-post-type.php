@@ -5,7 +5,7 @@
  * @link      http://s2webpress.com
  * @since     1.0.0
  *
- * @package   S2_Profiles
+ * @package   S2_Profiles_CPT
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
@@ -37,18 +37,18 @@ class S2_Profiles_CPT {
 		add_image_size( 'profiles-thumb', 300, 300, true ); // adds the profile image size
 
 		$labels = array(
-			'name'               => __( 'Profiles', 's2-profiles' ), 
-			'singular_name'      => __( 'Profile', 's2-profiles' ), 
-			'all_items'          => __( 'All Profiles', 's2-profiles' ), 
-			'add_new'            => __( 'Add New Profile', 's2-profiles' ), 
-			'add_new_item'       => __( 'Add New Profile', 's2-profiles' ),
-			'edit'               => __( 'Edit Profile', 's2-profiles' ), 
-			'edit_item'          => __( 'Edit Profile', 's2-profiles' ), 
-			'new_item'           => __( 'New Profile', 's2-profiles' ), 
-			'view_item'          => __( 'View Profile', 's2-profiles' ), 
-			'search_items'       => __( 'Search Profiles', 's2-profiles' ), 
-			'not_found'          => __( 'Nothing found. Try creating a new Profile.', 's2-profiles' ), 
-			'not_found_in_trash' => __( 'Nothing found in Trash', 's2-profiles' ),
+			'name'               => __( 'Profiles', 'simple-profiles' ), 
+			'singular_name'      => __( 'Profile', 'simple-profiles' ), 
+			'all_items'          => __( 'All Profiles', 'simple-profiles' ), 
+			'add_new'            => __( 'Add New Profile', 'simple-profiles' ), 
+			'add_new_item'       => __( 'Add New Profile', 'simple-profiles' ),
+			'edit'               => __( 'Edit Profile', 'simple-profiles' ), 
+			'edit_item'          => __( 'Edit Profile', 'simple-profiles' ), 
+			'new_item'           => __( 'New Profile', 'simple-profiles' ), 
+			'view_item'          => __( 'View Profile', 'simple-profiles' ), 
+			'search_items'       => __( 'Search Profiles', 'simple-profiles' ), 
+			'not_found'          => __( 'Nothing found. Try creating a new Profile.', 'simple-profiles' ), 
+			'not_found_in_trash' => __( 'Nothing found in Trash', 'simple-profiles' ),
 			'parent_item_colon'  => ''
 		);
 			

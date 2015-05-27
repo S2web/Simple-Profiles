@@ -5,29 +5,33 @@
  * @package   S2_Profiles
  * @author    Steven Slack <steven@s2webpress.com>
  * @license   GPL-2.0+
- * @link      http://s2webpress.com
- * @copyright 2014 S2 Web LLC
+ * @link      http://stevenslack.com
+ * @copyright 2015 S2 Web LLC
  *
  * @wordpress-plugin
  * Plugin Name:       Simple Profiles
  * Plugin URI:        https://github.com/S2web/Simple-Profiles
  * Description:       Simple Profiles for your business or organization. Each profile features fields with name, bio, profile picture, email, phone number, website, job/position title, custom links, social media links
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Steven Slack
- * Author URI:        http://s2webpress.com
- * Text Domain:       s2-profiles-locale
+ * Author URI:        http://stevenslack.com
+ * Text Domain:       simple-profiles
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages
  */
+
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-
+/**
+ * The initial plugin class
+ */
 class S2_Profiles {
+
 
 	/**
 	 * Instance of this class
@@ -36,11 +40,11 @@ class S2_Profiles {
 	 */
 	private static $instance = null;
 
+
 	/**
 	 * Initialize the plugin by setting localization and loading public scripts
 	 * and styles.
 	 *
-	 * @since     2.0.0
 	 */
 	private function __construct() {
 
@@ -52,7 +56,7 @@ class S2_Profiles {
 		new S2_Profiles_CPT();
 
 		// get front facing common class
-		S2_Profiles_Common::get_instance();
+		S2_Profiles_Display::get_instance();
 
 		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			$this->profile_featured_image_metabox();
@@ -64,6 +68,7 @@ class S2_Profiles {
 
 	}
 
+
 	/**
 	 * Define the internationalization functionality
 	 *
@@ -72,7 +77,7 @@ class S2_Profiles {
 	 */ 
 	public function load_profiles_textdomain() {
 
-		$domain = 'sc-catalog';
+		$domain = 'simple-profiles';
 
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
@@ -81,39 +86,39 @@ class S2_Profiles {
 
 	}
 
+
 	/*
 	 * Sets up constants used throughout the plugin
 	 */
 	public function setup_constants() {
 
-		if ( ! defined( 'S2_VERSION' ) ) {
-			define( 'S2_VERSION', '2.0.0' );
+		if ( ! defined( 'PROFILES_VERSION' ) ) {
+			define( 'PROFILES_VERSION', '2.0.1' );
 		}
 
-		if ( ! defined( 'S2_PROFILES' ) ) {
-			define( 'S2_PROFILES', plugins_url( 's2-profiles' ) );
+		if ( ! defined( 'PROFILES_PATH' ) ) {
+			define( 'PROFILES_PATH', plugins_url( 's2-profiles' ) );
 		}
 		
 	}
 
+
 	/**
 	 * Load Plugin Files
-	 * 
 	 */
 	public function load_dependencies() {
 
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-custom-post-type.php';
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-display.php';
 		require_once plugin_dir_path( __FILE__ ) . 'includes/class-featured-image-metabox-customizer.php';
-		require_once plugin_dir_path( __FILE__ ) . 'includes/class-s2-profiles-admin.php';
+		require_once plugin_dir_path( __FILE__ ) . 'includes/class-profiles-admin.php';
+		require_once plugin_dir_path( __FILE__ ) . 'includes/template-tags.php';
 
 	}
 
+
 	/**
 	 * Return an instance of this class.
-	 *
-	 * @since     2.0.0
-	 *
 	 * @return    object    A single instance of this class.
 	 */
 	public static function get_instance() {
@@ -126,10 +131,9 @@ class S2_Profiles {
 		return self::$instance;
 	}
 
+
 	/**
 	 * The Activation function. Runs when the plugin is activated
-	 * 
-	 * @since      2.0.0
 	 */
 	public static function activate() {
 
@@ -145,19 +149,21 @@ class S2_Profiles {
 
 	}
 
+
 	/**
 	 * Change the Featured Image Metabox to more appropriately assign profile pcitures
 	 */
 	public function profile_featured_image_metabox() {
 		new Featured_Image_Metabox_Customizer( array(
 			'post_type'     => 's2_profiles',
-			'metabox_title' => __( 'Profile Picture',        's2-profiles' ),
-			'set_text'      => __( 'Set Profile Picture',    's2-profiles' ),
-			'remove_text'   => __( 'Remove Profile Picture', 's2-profiles' )
+			'metabox_title' => __( 'Profile Picture',        'simple-profiles' ),
+			'set_text'      => __( 'Set Profile Picture',    'simple-profiles' ),
+			'remove_text'   => __( 'Remove Profile Picture', 'simple-profiles' )
 		));
 	}
 
-}
+} // end S2_Profiles class
+
 
 // Get the instance on plugins_loaded
 add_action( 'plugins_loaded', array( 'S2_Profiles', 'get_instance' ) );
